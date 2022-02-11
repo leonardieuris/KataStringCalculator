@@ -1,5 +1,6 @@
 using KataStringCalculator;
 using NUnit.Framework;
+using System;
 
 namespace KataStringCalculatorTest
 {
@@ -23,8 +24,21 @@ namespace KataStringCalculatorTest
         [TestCase("1\n2,4", ExpectedResult = 7)]
         public int Test(string input) =>_sut.Add(input);
 
+        [Test]
+        public void TestReturnException()
+        {
+            var input = "1\n2,4,";
+            Assert.Throws<SeparatorAtTheEndOfStringException>(() => _sut.Add(input));
+        }
 
 
-        
+        [Test]
+        public void TestException()
+        {
+            var input = "1\n2,b";
+            Assert.Throws<FormatException>(() => _sut.Add(input));
+        }
+
+
     }
 }
