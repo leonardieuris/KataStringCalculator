@@ -12,11 +12,9 @@ namespace KataStringCalculator
         {
             var tuple = ChoiseSeparator(input);
 
-            foreach (var element in tuple.Item2)
-            {
-                if (tuple.Item1.EndsWith(element))
-                    throw new SeparatorAtTheEndOfStringException("String ends with separator");
-            }
+            if(tuple.Item1.Length> 0 && tuple.Item2.Contains(tuple.Item1.Substring(tuple.Item1.Length-1)))
+                throw new SeparatorAtTheEndOfStringException("String ends with separator");
+
             return
             tuple.Item1
              .Split(tuple.Item2, StringSplitOptions.RemoveEmptyEntries)
@@ -28,9 +26,13 @@ namespace KataStringCalculator
             var DefaultSeparators = new string[] { ",", "\n" };
             if (!input.StartsWith("//"))
                 return (input, DefaultSeparators);
-
+           
                 var temp = input.Split("\n",2);
-                var separator = new string []{ temp[0].Substring(2)};
+
+            if(temp.Count()!=2)
+                throw new FormatException("Format error");
+
+            var separator = new string []{ temp[0].Substring(2)};
             if (separator[0].Equals(string.Empty))
                 throw new FormatException("Not Separator found");
                     return (temp[1], separator);

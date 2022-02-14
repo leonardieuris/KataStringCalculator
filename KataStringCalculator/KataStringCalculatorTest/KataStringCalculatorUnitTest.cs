@@ -2,9 +2,7 @@ using KataStringCalculator;
 using NUnit.Framework;
 using System;
 using KataStringCalculator.Exceptions;
-using Moq;
-using System.Collections;
-using System.Collections.Generic;
+using KataStringCalculator.Validators;
 
 namespace KataStringCalculatorTest
 {
@@ -16,26 +14,28 @@ namespace KataStringCalculatorTest
         [SetUp]
         public void Setup()
         {
-            Mock<IValidate> validator = new Mock<IValidate>();
-            validator.Setup(x => x.Validate(It.IsAny<IList<int>>())).Returns(true);
-            _sut = new Calculator(validator.Object);
+
+            var validatorNotNegativeValidator = new NotNegativeValidator();
+            validatorNotNegativeValidator.SetNext(new NumberLimitValidator());
+            _sut = new Calculator(validatorNotNegativeValidator);
         }
 
-        [TestCase("", ExpectedResult = 0)]
-        [TestCase("1", ExpectedResult = 1)]
-        [TestCase("1,2", ExpectedResult = 3)]
-        [TestCase("10,20,4,5,8", ExpectedResult = 47)]
-        [TestCase("10,20,4", ExpectedResult = 34)]
-        [TestCase("1,2\n3", ExpectedResult = 6)]
-        [TestCase("1\n2,4", ExpectedResult = 7)]
-        [TestCase("//;\n1;3", ExpectedResult = 4)]
-        [TestCase("//|\n1|2|3", ExpectedResult = 6)]
-        [TestCase("//sep\n2sep5", ExpectedResult = 7)]
+        //[TestCase("", ExpectedResult = 0)]
+        //[TestCase("1", ExpectedResult = 1)]
+        //[TestCase("1,2", ExpectedResult = 3)]
+        //[TestCase("10,20,4,5,8", ExpectedResult = 47)]
+        //[TestCase("10,20,4", ExpectedResult = 34)]
+        //[TestCase("1,2\n3", ExpectedResult = 6)]
+        //[TestCase("1\n2,4", ExpectedResult = 7)]
+        //[TestCase("//;\n1;3", ExpectedResult = 4)]
+        //[TestCase("//|\n1|2|3", ExpectedResult = 6)]
+        //[TestCase("//sep\n2sep5", ExpectedResult = 7)]
+        //[TestCase("//sep\n2sep5000", ExpectedResult = 2)]
+        [TestCase("//sep\n2sep5000sep4sep5", ExpectedResult = 11)]
         public int Test(string input)
-            {
-           
-             return _sut.Add(input);
-            }
+        {
+            return _sut.Add(input);
+        }
 
         [Test]
         public void TestReturnException()
@@ -79,8 +79,6 @@ namespace KataStringCalculatorTest
         public void TestExceptionInvalidWithNegativeNumbers()
         {
 
-            var validator = new Validator();
-            _sut = new Calculator(validator);
             var input = "//sep\n2sep5sep-100";
             Assert.Throws<NegativeNumbersException>(() => _sut.Add(input));
         }

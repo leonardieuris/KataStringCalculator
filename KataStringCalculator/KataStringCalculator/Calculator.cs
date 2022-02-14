@@ -1,24 +1,24 @@
 ﻿using System.Linq;
-using System;
+using KataStringCalculator.Validators;
 
 namespace KataStringCalculator
 {
 
     public class Calculator : ICalculator
     {
-        private IValidate _validator;
+        private IValidator _validator;
+        
 
-        public Calculator(IValidate validator)
+        public Calculator(IValidator validator)
         {
             _validator = validator;
         }
 
         public int Add(string numbers)
         {
-            var myinput = numbers.Splitter();
-            if(_validator.Validate(myinput))
-               return myinput.Sum();
-            throw new Exception();
+            var splitted = numbers.Splitter().ToList();
+            var validatedData = _validator.Validate(splitted);
+            return validatedData.Sum();
         }
            
     }
