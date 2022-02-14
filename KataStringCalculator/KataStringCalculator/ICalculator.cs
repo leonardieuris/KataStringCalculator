@@ -2,6 +2,6 @@
 {
     public interface ICalculator
     {
-        int Add(string numbers);
+        int Calculate(string numbers);
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
-using KataStringCalculator.Validators;
+using KataStringCalculator.IOC;
 
 namespace KataStringCalculator
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             Console.WriteLine("Inserisci la stringa da calcolare");
@@ -15,10 +16,9 @@ namespace KataStringCalculator
 
         private static int Calculate(string inputString)
         {
-            var validator = new NotNegativeValidator().SetNext(new NumberLimitValidator());
-            var calculator = new Calculator(validator);
+            var calculator = Container.GetService<ICalculator>();
 
-            return calculator.Add(inputString);
+            return calculator.Calculate(inputString);
         }
     }
 }
